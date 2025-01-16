@@ -37,7 +37,7 @@ while True:
             uyelik_secimi = modul_hata_yakala.hata_yakala(7)
 
             if uyelik_secimi == 0:
-                break  # Ana menüye dön
+                break  
 
             elif uyelik_secimi == 1:
                 Member_Transactions.list_member()
