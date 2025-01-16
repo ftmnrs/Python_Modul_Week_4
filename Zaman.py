@@ -1,8 +1,14 @@
 from datetime import datetime, timedelta
 
-def tarih():
-    if __name__=="__main__":
-        for i in range(1):
-            print(tarih())
+def eklenme_tarihi():
+    eklenme_tarihi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return eklenme_tarihi
+
+def iade_tarihi():
+    iade_tarihi = (datetime.now() + timedelta(weeks=2)).strftime("%Y-%m-%d %H:%M:%S")
+    return iade_tarihi
+
         
+
+
 
