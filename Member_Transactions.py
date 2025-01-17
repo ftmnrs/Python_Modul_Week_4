@@ -127,7 +127,7 @@ def search_book(uye):
             for i in taksi:
                 if i["Barkod"] == Barkod:
                     print("Bu kitap daha önce ödünç verildiği için kütüphanemizde mevcut değil!")
-                    return True  # Kayıt bulunduğunda döngüden çık
+                    return True  
     except json.JSONDecodeError:
         print("taksi.json dosyası düzgün bir JSON formatında değil.")
     except FileNotFoundError:
@@ -138,7 +138,7 @@ def search_book(uye):
 def give_book(uye):
     Barkod = uye["Barkod"]
 
-    # Kitap kütüphanede mevcut mu kontrol et
+    # Kitap taksi dosyasinda mevcut mu kontrol et
     if search_book(uye):
         return
 
