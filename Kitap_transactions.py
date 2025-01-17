@@ -1,100 +1,75 @@
-import Member_Transactions
-import Kitap_transactions
-import modul_hata_yakala
+import json
+from datetime import datetime, timedelta
+import Zaman
 
-while True:
-    print("""
-    ------------------------------------------------------------
-    -      Halk Kutuphanesine Hosgeldiniz!                     -
-    -                                                          -
-    -   1- Uyelik Islemleri                                    -                    
-    -   2- Kitap Islemleri                                     -                     
-    -   0- Cikis                                               -                       
-    -                                                          -
-    ------------------------------------------------------------
-    """)
 
-    secim = modul_hata_yakala.hata_yakala(2)
+file_name="kitap.json"
+
+def read_json_file(file_name):
+    try:
+        with open(file_name, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+def write_json_file(file_name, data):
+    with open(file_name, 'w') as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+
+def add_book(file_name, book):
+    books = read_json_file(file_name)
+    books.append(book)
+    write_json_file(file_name, books)
+    print("Kitap başarıyla eklendi.")
+
+def get_book_info():
+    Barkod = int(input("Barkod numarasını giriniz: "))
+    Dil = input("Kitabın dilini giriniz: ")
+    Fiyat = float(input("Kitabın fiyatını giriniz: "))
+    Kitap_Adi = input("Kitabın adını giriniz: ")
+    Yayinevi = input("Kitabın yayınevini giriniz: ")
+    Yazar = input("Kitabın yazarını giriniz: ")
     
-    if secim == 1:
-        while True:
-            print("""
-            ------------------------------------------------------------
-        -                     Uyelik Islemleri                     -
-        -                                                          -
-        -   1- Uyeleri Listele                                     -                    
-        -   2- Uye Ekleme                                          -                     
-        -   3- Uye Ara                                             -                       
-        -   4- Uye Sil                                             -                       
-        -   5- Kitap Odunc Verme                                   -                       
-        -   6- Kitap Iade                                          -                       
-        -   7- Kitap Takibi                                        -                       
-        -   0- Cikis                                               -                       
-        -                                                          -
-        ------------------------------------------------------------    
-        """)
-            print("Uyelik islemlerine giris yaptiniz!")
-            uyelik_secimi = modul_hata_yakala.hata_yakala(7)
+    
 
-            if uyelik_secimi == 0:
-                break  # Ana menüye dön
+    new_book = {
+        "Barkod": Barkod,
+        "Dil": Dil,
+        "Fiyat": Fiyat,
+        "Kitap_Adi": Kitap_Adi,
+        "Yayinevi": Yayinevi,
+        "Yazar": Yazar,
+        
+    }
+    return new_book
 
-            elif uyelik_secimi == 1:
-                Member_Transactions.list_member()
-            
-            elif uyelik_secimi == 2:
-                Member_Transactions.add_member()
+def delete_book(file_name,barkod):
+    while True:
+        try:
+            books = read_json_file(file_name)
+            books = [book for book in books if book["Barkod"] != barkod]
+            write_json_file(file_name, books)
+            print("Kitap başarıyla silindi.")
+            break
+        except Exception:
+            print("Hatali giris yaptiniz, tekrar deneyiniz.")
 
-            elif uyelik_secimi == 3:
-                Member_Transactions.check_member()
 
-            elif uyelik_secimi == 4:
-                Member_Transactions.delete_member()
+def list_books(file_name):
+    books = read_json_file(file_name)
+    for book in books:
+        print(book)
 
-            elif uyelik_secimi == 5:
-                Member_Transactions.give_book()
 
-            elif uyelik_secimi == 6:
-                Member_Transactions.receive_book()
-            
-            elif uyelik_secimi == 7:
-                Member_Transactions.members_book()
+def search_book(file_name, keyword):
+    books = read_json_file(file_name)
+    found_books = [book for book in books if keyword.lower() in book["Kitap_Adi"].lower()]
+    if found_books:
+        for book in found_books:
+            print(f"{book} isimli kitap kutuphanemizde mevcuttur.")
+    else:
+        print("Kitap bulunamadı.")
 
-    elif secim == 2:
-        while True:
-            print("""
-            ------------------------------------------------------------
-        -                     Kitap Islemleri                      -
-        -                                                          -
-        -   1- Kitaplari Listele                                   -                    
-        -   2- Kitap Ekleme                                        -                     
-        -   3- Kitap Ara                                           -                       
-        -   4- Kitap Sil                                           -                                             
-        -   0- Cikis                                               -                       
-        -                                                          -
-        ------------------------------------------------------------    
-        """)
-            print("Kitap islemlerine giris yaptiniz!")
-            kitap_secimi = modul_hata_yakala.hata_yakala(4)
-            
-            if kitap_secimi == 0:
-                break  
 
-            elif kitap_secimi == 1:
-                Kitap_transactions.list_book()
 
-            elif kitap_secimi == 2:
-                new_book = Kitap_transactions.get_book_info()
-                Kitap_transactions.add_book('kitap.json', new_book)
-
-            elif kitap_secimi == 3:
-                kitap_adi=input("Aradiginiz kitap adini giriniz: ").lower()
-                Kitap_transactions.search_book('kitap.json', kitap_adi)
-
-            elif kitap_secimi == 4:
-                barkod=int(input("Silinecek kitabin barkod numarasini giriniz: "))
-                Kitap_transactions.delete_book("kitap.json",barkod)
-
-    elif secim == 0:
-        print("Sistemden guvenle cikis yaptiniz!")
-        break  
