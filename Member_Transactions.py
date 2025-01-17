@@ -71,7 +71,32 @@ def list_member():
 
 
 def delete_member():
-    pass
+    silinecek_uye_id = int(input("Silmek istediğiniz üyenin ID'sini girin: "))
+    
+
+
+    with open("uye.json", 'r+') as file:
+        try:
+            uyeler = json.load(file)
+        except json.JSONDecodeError:
+            uyeler = []
+
+        
+
+        # Filtreleme işlemi: ID eşleşen üyeyi kaldır
+        yeni_uyeler = [uye for uye in uyeler if uye["ID"] != silinecek_uye_id]
+
+        if len(uyeler) == len(yeni_uyeler):
+            print(f"Üye bulunamadı: Ad:  ID : {silinecek_uye_id}")
+            return
+
+        # Üye bulunduysa, yeni veriyi dosyaya kaydet
+        file.seek(0)  # Dosya başına git
+        file.truncate()  # Eski veriyi sil
+        json.dump(yeni_uyeler, file, indent=4)
+        print(f"Üye başarıyla silindi: ID: {silinecek_uye_id}")
+    
+
 
 def check_member():
     pass
