@@ -1,6 +1,11 @@
 import Member_Transactions
 import Kitap_transactions
 import modul_hata_yakala
+import Member_Transactions
+import json
+
+
+
 
 while True:
     print("""
@@ -19,7 +24,7 @@ while True:
     if secim == 1:
         while True:
             print("""
-            ------------------------------------------------------------
+        ------------------------------------------------------------
         -                     Uyelik Islemleri                     -
         -                                                          -
         -   1- Uyeleri Listele                                     -                    
@@ -43,7 +48,8 @@ while True:
                 Member_Transactions.list_member()
             
             elif uyelik_secimi == 2:
-                Member_Transactions.add_member()
+                kullanici=Member_Transactions.kayit_bilgiler_al()
+                Member_Transactions.add_member(kullanici)
 
             elif uyelik_secimi == 3:
                 Member_Transactions.check_member()
@@ -52,7 +58,9 @@ while True:
                 Member_Transactions.delete_member()
 
             elif uyelik_secimi == 5:
-                Member_Transactions.give_book()
+                uye=Member_Transactions.get_member_info()
+                Member_Transactions.search_book(uye)
+                Member_Transactions.give_book(uye)
 
             elif uyelik_secimi == 6:
                 Member_Transactions.receive_book()
@@ -81,17 +89,19 @@ while True:
                 break  
 
             elif kitap_secimi == 1:
-                Kitap_transactions.list_book()
+                Kitap_transactions.list_books("kitap.json")
 
             elif kitap_secimi == 2:
                 new_book = Kitap_transactions.get_book_info()
-                Kitap_transactions.add_book('books.json', new_book)
+                Kitap_transactions.add_book('kitap.json', new_book)
 
             elif kitap_secimi == 3:
-                Kitap_transactions.search_book()
+                kitap_adi=input("Aradiginiz kitap adini giriniz: ").lower()
+                Kitap_transactions.search_book('kitap.json', kitap_adi)
 
             elif kitap_secimi == 4:
-                Kitap_transactions.delete_book()
+                barkod=int(input("Silinecek kitabin barkod numarasini giriniz: "))
+                Kitap_transactions.delete_book("kitap.json",barkod)
 
     elif secim == 0:
         print("Sistemden guvenle cikis yaptiniz!")
